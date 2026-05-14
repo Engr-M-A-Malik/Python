@@ -1,0 +1,379 @@
+{
+  "updatedAt": "2026-05-14T11:14:13.967Z",
+  "createdAt": "2026-05-08T11:45:29.040Z",
+  "id": "tDnGWVtyFZpHIe5V",
+  "name": "Github Versioning",
+  "description": null,
+  "active": true,
+  "isArchived": false,
+  "nodes": [
+    {
+      "parameters": {
+        "operation": "get",
+        "workflowId": {
+          "__rl": true,
+          "value": "=https://data-flow-59a4585359cd.herokuapp.com/workflow/tDnGWVtyFZpHIe5V",
+          "mode": "url"
+        },
+        "requestOptions": {}
+      },
+      "type": "n8n-nodes-base.n8n",
+      "typeVersion": 1,
+      "position": [
+        -432,
+        -80
+      ],
+      "id": "db6bfc1a-8517-4cc0-9598-50da04479639",
+      "name": "Get a workflow",
+      "alwaysOutputData": false,
+      "credentials": {
+        "n8nApi": {
+          "id": "CogfZl8vPfD8a6uD",
+          "name": "n8n account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "method": "PUT",
+        "url": "=https://api.github.com/repos/Engr-M-A-Malik/Python/contents/backups/{{ $node['Get a workflow'].json.name.replace(/\\s+/g, '_') }}.json",
+        "authentication": "genericCredentialType",
+        "genericAuthType": "httpHeaderAuth",
+        "sendHeaders": true,
+        "headerParameters": {
+          "parameters": [
+            {
+              "name": "Accept",
+              "value": "application/vnd.github+json"
+            }
+          ]
+        },
+        "sendBody": true,
+        "specifyBody": "json",
+        "jsonBody": "={\n  \"message\": \"Publish workflow \\\"{{ $node['Get a workflow'].json.name }}\\\" (v{{ $node['Get a workflow'].json.versionId }})\",\n  \"content\": \"{{ JSON.stringify($node['Get a workflow'].json, null, 2).base64Encode() }}\",\n  \"sha\": \"{{ $node['Get File'].json?.sha || null }}\"\n}\n",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.4,
+      "position": [
+        48,
+        -80
+      ],
+      "id": "5124f317-1b48-49d7-baf1-26f2be8b3416",
+      "name": "HTTP Request1",
+      "credentials": {
+        "httpHeaderAuth": {
+          "id": "wwPdb27kbnMSEqPb",
+          "name": "Github"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "url": "=https://api.github.com/repos/Engr-M-A-Malik/Python/contents/backups/{{ $node['Get a workflow'].json.name.replace(/\\s+/g, '_') }}.json",
+        "authentication": "genericCredentialType",
+        "genericAuthType": "httpHeaderAuth",
+        "sendHeaders": true,
+        "headerParameters": {
+          "parameters": [
+            {
+              "name": "Accept",
+              "value": "application/vnd.github+json"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.4,
+      "position": [
+        -192,
+        -80
+      ],
+      "id": "a26e4083-e96e-46c0-bfe8-fb9ec81a92e2",
+      "name": "Get File",
+      "credentials": {
+        "httpMultipleHeadersAuth": {
+          "id": "qrjXNDfk3UquOojW",
+          "name": "Supabase RPC – Update User"
+        },
+        "httpHeaderAuth": {
+          "id": "wwPdb27kbnMSEqPb",
+          "name": "Github"
+        }
+      },
+      "onError": "continueErrorOutput"
+    },
+    {
+      "parameters": {
+        "events": [
+          "activate"
+        ]
+      },
+      "type": "n8n-nodes-base.n8nTrigger",
+      "typeVersion": 1,
+      "position": [
+        -640,
+        -80
+      ],
+      "id": "d6b78638-702b-4b3f-904e-63a4428682ee",
+      "name": "n8n Trigger"
+    }
+  ],
+  "connections": {
+    "Get a workflow": {
+      "main": [
+        [
+          {
+            "node": "Get File",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        []
+      ]
+    },
+    "Get File": {
+      "main": [
+        [
+          {
+            "node": "HTTP Request1",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "HTTP Request1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "HTTP Request1": {
+      "main": [
+        []
+      ]
+    },
+    "n8n Trigger": {
+      "main": [
+        [
+          {
+            "node": "Get a workflow",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "settings": {
+    "executionOrder": "v1",
+    "binaryMode": "separate"
+  },
+  "staticData": null,
+  "meta": {
+    "templateCredsSetupCompleted": true
+  },
+  "pinData": {},
+  "versionId": "b5d83b1c-a030-4cc5-8cfe-bfb71f89bbb2",
+  "activeVersionId": "6a982f3c-476a-47ba-811f-461027414e38",
+  "versionCounter": 221,
+  "triggerCount": 1,
+  "shared": [
+    {
+      "updatedAt": "2026-05-08T11:45:29.040Z",
+      "createdAt": "2026-05-08T11:45:29.040Z",
+      "role": "workflow:owner",
+      "workflowId": "tDnGWVtyFZpHIe5V",
+      "projectId": "yV4AmGtUua9VmlJB",
+      "project": {
+        "updatedAt": "2024-09-26T10:18:08.753Z",
+        "createdAt": "2024-09-26T10:17:46.889Z",
+        "id": "yV4AmGtUua9VmlJB",
+        "name": "Jordan Hardy <jordan.h@harwell.com.au>",
+        "type": "personal",
+        "icon": null,
+        "description": null,
+        "creatorId": "8e35c20b-6827-4a1b-a321-e546a1b16ef5"
+      }
+    }
+  ],
+  "tags": [],
+  "activeVersion": {
+    "updatedAt": "2026-05-14T09:46:25.442Z",
+    "createdAt": "2026-05-14T09:46:20.360Z",
+    "versionId": "6a982f3c-476a-47ba-811f-461027414e38",
+    "workflowId": "tDnGWVtyFZpHIe5V",
+    "nodes": [
+      {
+        "parameters": {
+          "operation": "get",
+          "workflowId": {
+            "__rl": true,
+            "mode": "id",
+            "value": "={{ $json.workflow_id }}"
+          },
+          "requestOptions": {}
+        },
+        "type": "n8n-nodes-base.n8n",
+        "typeVersion": 1,
+        "position": [
+          -432,
+          -80
+        ],
+        "id": "db6bfc1a-8517-4cc0-9598-50da04479639",
+        "name": "Get a workflow",
+        "alwaysOutputData": false,
+        "credentials": {
+          "n8nApi": {
+            "id": "CogfZl8vPfD8a6uD",
+            "name": "n8n account"
+          }
+        }
+      },
+      {
+        "parameters": {
+          "method": "PUT",
+          "url": "=https://api.github.com/repos/Engr-M-A-Malik/Python/contents/backups/{{ $node['Get a workflow'].json.name.replace(/\\s+/g, '_') }}.json",
+          "authentication": "genericCredentialType",
+          "genericAuthType": "httpHeaderAuth",
+          "sendHeaders": true,
+          "headerParameters": {
+            "parameters": [
+              {
+                "name": "Accept",
+                "value": "application/vnd.github+json"
+              }
+            ]
+          },
+          "sendBody": true,
+          "specifyBody": "json",
+          "jsonBody": "={\n  \"message\": \"Publish workflow \\\"{{ $node['Get a workflow'].json.name }}\\\" (v{{ $node['Get a workflow'].json.versionId }})\",\n  \"content\": \"{{ JSON.stringify($node['Get a workflow'].json, null, 2).base64Encode() }}\",\n  \"sha\": \"{{ $node['Get File'].json?.sha || null }}\"\n}\n",
+          "options": {}
+        },
+        "type": "n8n-nodes-base.httpRequest",
+        "typeVersion": 4.4,
+        "position": [
+          48,
+          -80
+        ],
+        "id": "5124f317-1b48-49d7-baf1-26f2be8b3416",
+        "name": "HTTP Request1",
+        "credentials": {
+          "httpHeaderAuth": {
+            "id": "wwPdb27kbnMSEqPb",
+            "name": "Github"
+          }
+        }
+      },
+      {
+        "parameters": {
+          "url": "=https://api.github.com/repos/Engr-M-A-Malik/Python/contents/backups/{{ $node['Get a workflow'].json.name.replace(/\\s+/g, '_') }}.json",
+          "authentication": "genericCredentialType",
+          "genericAuthType": "httpHeaderAuth",
+          "sendHeaders": true,
+          "headerParameters": {
+            "parameters": [
+              {
+                "name": "Accept",
+                "value": "application/vnd.github+json"
+              }
+            ]
+          },
+          "options": {}
+        },
+        "type": "n8n-nodes-base.httpRequest",
+        "typeVersion": 4.4,
+        "position": [
+          -160,
+          -80
+        ],
+        "id": "a26e4083-e96e-46c0-bfe8-fb9ec81a92e2",
+        "name": "Get File",
+        "credentials": {
+          "httpMultipleHeadersAuth": {
+            "id": "qrjXNDfk3UquOojW",
+            "name": "Supabase RPC – Update User"
+          },
+          "httpHeaderAuth": {
+            "id": "wwPdb27kbnMSEqPb",
+            "name": "Github"
+          }
+        },
+        "onError": "continueErrorOutput"
+      },
+      {
+        "parameters": {
+          "events": [
+            "activate"
+          ]
+        },
+        "type": "n8n-nodes-base.n8nTrigger",
+        "typeVersion": 1,
+        "position": [
+          -640,
+          -80
+        ],
+        "id": "d6b78638-702b-4b3f-904e-63a4428682ee",
+        "name": "n8n Trigger"
+      }
+    ],
+    "connections": {
+      "Get a workflow": {
+        "main": [
+          [
+            {
+              "node": "Get File",
+              "type": "main",
+              "index": 0
+            }
+          ],
+          []
+        ]
+      },
+      "Get File": {
+        "main": [
+          [
+            {
+              "node": "HTTP Request1",
+              "type": "main",
+              "index": 0
+            }
+          ]
+        ]
+      },
+      "HTTP Request1": {
+        "main": [
+          []
+        ]
+      },
+      "n8n Trigger": {
+        "main": [
+          [
+            {
+              "node": "Get a workflow",
+              "type": "main",
+              "index": 0
+            }
+          ]
+        ]
+      }
+    },
+    "authors": "Jordan Hardy",
+    "name": "Version 6a982f3c",
+    "description": "",
+    "autosaved": true,
+    "workflowPublishHistory": [
+      {
+        "createdAt": "2026-05-14T09:46:25.437Z",
+        "id": 45,
+        "workflowId": "tDnGWVtyFZpHIe5V",
+        "versionId": "6a982f3c-476a-47ba-811f-461027414e38",
+        "event": "activated",
+        "userId": "8e35c20b-6827-4a1b-a321-e546a1b16ef5"
+      }
+    ]
+  }
+}
